@@ -5,7 +5,7 @@ const config: Config = {
     // AIGCSDK_AI_PAINTING_ANIME
     mode: 'AI_PAINTING_ANIME',
 
-    botToken: '5264968049:AAHUniq68Nqq39CrFf8lVqerwetirQnGxzc',
+    botToken: '6019511005:AAG5lXsS6aZHE0V2nEJgKiYJX2U2jaVmtNY',
 
     keepFiles: {
         compared: true,
@@ -15,13 +15,13 @@ const config: Config = {
     },
 
     messages: {
-        blocked: 'The Chinese website has blocked the bot, too bad 🤷‍♂️',
+        blocked: 'قام الموقع الصيني بحظر الروبوت، سيء للغاية 🤷‍♂️',
         bye:
-            'Thank you for using this bot 👍\n' +
-            'Please rate and fork it on [Github](https://github.com/lmcsu/qq-neural-anime-tg) ♥️',
-        hello: 'Hi 👋 Send me a photo to convert it into a 2D anime art',
-        media: '@qq\\_neural\\_anime\\_bot',
-        received: 'Photo has been received, please wait',
+            'شكراً لاستخدامك البوت للاستفسار :@ta_ja199\n\n' +
+            'اذا عجبك البوت انظم في قناتنا :@i2pdfbotchannel♥️',
+        hello: 'مرحبًا 👋 ، أرسل لي صورة لتحويلها إلى فن أنمي ثنائي الأبعاد\n للاستفسار :@ta_ja199',
+        media: '@AnimetoImgbot',
+        received: 'تم استلام الصورة، من فضلك انتظر بعض دقائق',
     },
 
     sendMedia: {
