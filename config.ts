@@ -19,7 +19,7 @@ const config: Config = {
         bye:
             'Thank you for using this bot 👍\n' +
             'Please rate and fork it on [Github](https://github.com/lmcsu/qq-neural-anime-tg) ♥️',
-        hello: 'مرحبًا 👋، أرسل لي صورتك لتحويلها إلى فن أنمي ثنائي الأبعاد للمزيد من مساعدة',
+        hello: 'مرحبًا 👋، أرسل لي صورتك لتحويلها إلى فن أنمي ثنائي الأبعاد للمزيد من مساعدة\n للاستفسار:@ta\\_\\ja199',
         media: '@qq\\_neural\\_anime\\_bot',
         received: 'Photo has been received, please wait',
     },
