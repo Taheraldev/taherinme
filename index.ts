@@ -12,7 +12,7 @@ import md5 from 'md5';
 import asyncRetry from 'async-retry';
 
 if (!Object.values(config.sendMedia).some(((value) => value))) {
-    throw new Error('اضبط واحدا على الأقل من خيارات "sendMedia" في التكوين الخاص بك على "صحيح"');
+    throw new Error('Set at least one of "sendMedia" options in your config to "true"');
 }
 
 let httpsAgent: HttpsProxyAgent | SocksProxyAgent | undefined;
@@ -188,12 +188,12 @@ const qqRequest = async (mode: typeof config.mode, imgBuffer: Buffer) => {
                         (data.msg === 'IMG_ILLEGAL') ||
                         (data.msg as string || '').includes('image illegal')
                     ) {
-                        bail(new Error('لم أستطع اجتياز الرقابة. . جرب صورة أخرى.'));
+                        bail(new Error('Couldn\'t pass the censorship. Try another photo.'));
                         return;
                     }
 
                     if (data.code === 1001) {
-                        bail(new Error('لم يتم العثور على الوجه. جرب صورة أخرى.'));
+                        bail(new Error('Face not found. Try another photo.'));
                         return;
                     }
 
@@ -478,7 +478,7 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
             );
         } catch (e) {
             console.error(`Telegram getFileLink error caught: ${(e as Error).toString()}`);
-            throw new Error('لم أتمكن من تحميل الصورة، من فضلك حاول مرة أخرى');
+            throw new Error('Couldn\'t load the photo, please try again');
         }
 
         let telegramFileData;
@@ -507,7 +507,7 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
             );
         } catch (e) {
             console.error(`Telegram file download error caught: ${(e as Error).toString()}`);
-            throw new Error('لم أتمكن من تحميل الصورة، من فضلك حاول مرة أخرى');
+            throw new Error('Couldn\'t load the photo, please try again');
         }
 
         if (config.keepFiles.input) {
@@ -523,7 +523,7 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
                 parse_mode: 'MarkdownV2',
             });
         } catch (e) {
-            console.error('غير قادر على إرسال رسالة "الصورة المستلمة" من أجل ' + userId, (e as Error).toString());
+            console.error('Unable to send "photo received" message for ' + userId, (e as Error).toString());
         }
 
         console.log('Uploading to QQ for ' + userId);
@@ -531,8 +531,8 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
         try {
             imgData = await qqRequest(config.mode, telegramFileData);
         } catch (e) {
-            if ((e as Error).toString().includes('لم يتم العثور على الوجه')) { // TODO: it shouldn't rely on the text
-                console.log('لم يتم العثور على الوجه، في محاولة للاختراق من أجل ' + userId);
+            if ((e as Error).toString().includes('Face not found')) { // TODO: it shouldn't rely on the text
+                console.log('Face not found, trying to hack for ' + userId);
 
                 // FaceHack doesn't work with AI_PAINTING_SPRING at all, trying to fallback.
                 let mode = config.mode;
@@ -545,9 +545,9 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
                 throw e;
             }
         }
-        console.log('استجابت QQ بنجاح من أجل ' + userId);
+        console.log('QQ responded successfully for ' + userId);
 
-        console.log('التنزيل من QQ من أجل ' + userId);
+        console.log('Downloading from QQ for ' + userId);
 
         // eslint-disable-next-line prefer-const
         let [comparedImgData, singleImgData, videoData] = await Promise.all([
@@ -600,13 +600,13 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
                     } catch (e) {
                         const msg = (e as Error).toString();
 
-                        if (msg.includes('لم يتم العثور على الرسالة التي تم الرد عليها')) {
-                            bail(new Error('تم حذف الصورة'));
+                        if (msg.includes('replied message not found')) {
+                            bail(new Error('Photo has been deleted'));
                             return;
                         }
 
-                        if (msg.includes('تم حظره من قبل المستخدم')) {
-                            bail(new Error('تم حظر الروبوت من قبل المستخدم'));
+                        if (msg.includes('was blocked by the user')) {
+                            bail(new Error('Bot was blocked by the user'));
                             return;
                         }
 
@@ -682,7 +682,7 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
                     parse_mode: 'MarkdownV2',
                 });
             } catch (e) {
-                console.error('غير قادر على إرسال byeMessage ل ' + userId, (e as Error).toString());
+                console.error('Unable to send byeMessage for ' + userId, (e as Error).toString());
             }
         }
     } catch (e) {
@@ -694,14 +694,14 @@ const onPhotoReceived = async (ctx: Context, userId: number, photoId: string, re
                 async (bail) => {
                     try {
                         await ctx.reply(
-                            'حدث بعض الأخطاء السيئة، يرجى المحاولة مرة أخرى\n\n' + (e as Error).toString(),
+                            'Some nasty error has occurred, please try again\n\n' + (e as Error).toString(),
                             {
                                 reply_to_message_id: replyMessageId,
                             },
                         );
                     } catch (e) {
-                        if ((e as Error).toString().includes('تم حظره من قبل المستخدم')) {
-                            bail(new Error('تم حظر الروبوت من قبل المستخدم'));
+                        if ((e as Error).toString().includes('was blocked by the user')) {
+                            bail(new Error('Bot was blocked by the user'));
                             return;
                         }
 
@@ -749,7 +749,7 @@ const startBot = () => {
             parse_mode: 'MarkdownV2',
         })
             .catch((e) => {
-                console.error('غير قادر على إرسال helloMessage من أجل ' + ctx.update.message.from.id, (e as Error).toString());
+                console.error('Unable to send helloMessage for ' + ctx.update.message.from.id, (e as Error).toString());
             });
     });
 
@@ -764,7 +764,7 @@ const startBot = () => {
     });
 
     bot.catch((e) => {
-        console.error('حدث خطأ في البوت ', e);
+        console.error('Bot error has occurred ', e);
     });
 
     bot.launch();
