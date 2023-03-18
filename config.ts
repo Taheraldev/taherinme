@@ -3,7 +3,7 @@ const config: Config = {
     // DIFFERENT_DIMENSION_ME
     // AI_PAINTING_ANIME
     // AIGCSDK_AI_PAINTING_ANIME
-    mode: 'AI_PAINTING_ANIME',
+    mode: 'DIFFERENT_DIMENSION_ME',
 
     botToken: '6016945663:AAFYr1oaLltIgeMtw5Lb5uSabyVWL4R7UcU',
 
